@@ -46,7 +46,13 @@ namespace pozdnyakov {
       using NodePointer = typename std::add_pointer< HashNode< Key, Value > >::type;
       NodePointer * const buckets = new NodePointer[bucket_count]{};
       for (std::size_t i = 0; i < table.bucket_count; ++i) {
-        
+        HashNode< Key, Value > * node = table.buckets[i];
+        while (node != nullptr) {
+          HashNode< Key, Value > * const next = node->next;
+          const std::size_t index = Hash()(node->key) % bucket_count;
+          node->next = buckets[index];
+          buckets[index] = node;
+          node = next;
         }
       }
       delete[] table.buckets;
@@ -73,9 +79,16 @@ namespace pozdnyakov {
   Value & emplace(HashTable< Key, Value, Hash, Equal > & table, const Key & key, const Value & value)
   {
     HashNode< Key, Value > * const found = detail::findNode(table, key);
-    
-
-
+    if (found != nullptr) {
+      return found->value;
+    }
+    constexpr std::size_t initial_bucket_count = 16;
+    constexpr std::size_t growth_factor = 2;
+    if (table.bucket_count == 0) {
+      detail::rehash(table, initial_bucket_count);
+    } else if (table.size >= table.bucket_count) {
+      detail::rehash(table, table.bucket_count * growth_factor);
+    }
     const std::size_t index = detail::getBucket(table, key);
     HashNode< Key, Value > * const node = new HashNode< Key, Value >{key, value, table.buckets[index]};
     table.buckets[index] = node;
