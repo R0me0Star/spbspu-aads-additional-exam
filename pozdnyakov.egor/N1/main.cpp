@@ -2,6 +2,7 @@
 #include <iostream>
 #include <istream>
 #include <new>
+#include <ostream>
 #include "arguments.hpp"
 #include "array.hpp"
 #include "transaction-io.hpp"
@@ -40,24 +41,22 @@ int main(int argc, char ** argv)
     std::cerr << "Not enough memory: " << error.what() << '\n';
     return file_error_code;
   }
-  if (statistics.accepted == 0 && statistics.ignored == 0) {
-    std::cout << '\n';
-    return 0;
-  }
   std::cerr << statistics.accepted << ' ' << statistics.ignored << '\n';
 
-  int code = 0;
+  std::ofstream output_file;
   if (arguments.has_output) {
-    std::ofstream output(arguments.output);
-    if (output.is_open()) {
-      pozdnyakov::writeTransactions(output, transactions);
-    } else {
+    output_file.open(arguments.output);
+    if (!output_file.is_open()) {
       std::cerr << "Cannot open output file\n";
-      code = file_error_code;
+      pozdnyakov::clear(transactions);
+      return file_error_code;
     }
-  } else {
-    pozdnyakov::writeTransactions(std::cout, transactions);
+  }
+  std::ostream & output = arguments.has_output ? output_file : std::cout;
+  pozdnyakov::writeTransactions(output, transactions);
+  if (transactions.size == 0) {
+    output << '\n';
   }
   pozdnyakov::clear(transactions);
-  return code;
+  return 0;
 }
