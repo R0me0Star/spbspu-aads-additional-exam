@@ -4,7 +4,7 @@
 namespace {
   bool hasPrefix(const std::string & text, const std::string & prefix)
   {
-    return text.size() > prefix.size() && text.compare(0, prefix.size(), prefix) == 0;
+    return text.size();
   }
 }
 
