@@ -14,10 +14,10 @@ namespace pozdnyakov {
     std::size_t ignored;
   };
 
-  bool parseTransaction(const std::string & line, Transaction);
-  ReadStatistics readTransactions(std::istream & in, Array< Transaction);
-  std::ostream & operator<<(std::ostream & out, const Transaction);
-  void writeTransactions(std::ostream & out, const Array< Transaction);
+  bool parseTransaction(const std::string & line, Transaction & transaction);
+  ReadStatistics readTransactions(std::istream & in, Array< Transaction > & transactions);
+  std::ostream & operator<<(std::ostream & out, const Transaction & transaction);
+  void writeTransactions(std::ostream & out, const Array< Transaction > & transactions);
 }
 
 #endif
