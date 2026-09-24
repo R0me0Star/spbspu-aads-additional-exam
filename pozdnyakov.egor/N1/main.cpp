@@ -42,7 +42,7 @@ int main(int argc, char ** argv)
     return file_error_code;
   }
   if (statistics.accepted == 0 && statistics.ignored == 0) {
-    std::cout << '\n';
+    std::cerr << '\n';
     return empty_input_code;
   }
   std::cerr << statistics.accepted << ' ' << statistics.ignored << '\n';
