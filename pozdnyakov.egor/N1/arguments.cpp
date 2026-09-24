@@ -10,10 +10,6 @@ namespace {
 
 bool pozdnyakov::parseArguments(int argc, const char * const * argv, Arguments & arguments)
 {
-  constexpr int max_arguments = 2;
-  if (argc - 1 > max_arguments) {
-    return false;
-  }
   const std::string input_prefix = "in:";
   const std::string output_prefix = "out:";
   Arguments result{"", "", false, false};
