@@ -24,9 +24,24 @@ namespace {
     pozdnyakov::skipSpaces(line, position);
     const bool incoming = position < line.size() && line[position] == '-';
     pozdnyakov::Commission result{0, incoming, 0, 0, 0};
-    
-
-
+    if (!pozdnyakov::parseAccount(line, position, result.account)) {
+      return false;
+    }
+    if (!pozdnyakov::parseInteger(line, position, result.percent)) {
+      return false;
+    }
+    if (!pozdnyakov::parseInteger(line, position, result.from)) {
+      return false;
+    }
+    if (!pozdnyakov::parseInteger(line, position, result.to)) {
+      return false;
+    }
+    if (!pozdnyakov::isLineEnd(line, position)) {
+      return false;
+    }
+    if (result.percent < 1 || result.percent > max_percent || result.from < 0 || result.from >= result.to) {
+      return false;
+    }
     commission = result;
     return true;
   }
@@ -45,7 +60,20 @@ bool pozdnyakov::readTransactions(std::istream & in, BankData & data, std::strin
 {
   std::string line;
   while (std::getline(in, line)) {
-   
+    if (isBlank(line)) {
+      continue;
+    }
+    if (isCommandStart(line)) {
+      first_command = line;
+      return true;
+    }
+    Transaction transaction{0, 0, 0};
+    if (!parseTransaction(line, transaction)) {
+      return false;
+    }
+    if (transaction.from != transaction.to) {
+      addTransaction(data, transaction);
+    }
   }
   return true;
 }
@@ -54,7 +82,16 @@ bool pozdnyakov::readCommissions(std::istream & in, BankData & data)
 {
   std::string line;
   while (std::getline(in, line)) {
-  
+    if (isBlank(line)) {
+      continue;
+    }
+    Commission commission{0, false, 0, 0, 0};
+    if (!parseCommission(line, commission)) {
+      return false;
+    }
+    emplace(data.accounts, commission.account, AccountTotals{0, 0});
+    pushBack(data.commissions, commission);
+  }
   return true;
 }
 

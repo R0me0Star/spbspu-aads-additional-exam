@@ -2,10 +2,11 @@
 #include <iostream>
 #include <istream>
 #include <new>
+#include <array.hpp>
+#include <transaction-io.hpp>
+#include <transaction.hpp>
 #include "arguments.hpp"
-#include "array.hpp"
-#include "transaction-io.hpp"
-#include "transaction.hpp"
+#include "read-statistics.hpp"
 
 int main(int argc, char ** argv)
 {
