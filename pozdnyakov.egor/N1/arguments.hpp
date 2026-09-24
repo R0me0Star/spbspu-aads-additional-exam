@@ -11,6 +11,7 @@ namespace pozdnyakov {
     bool has_output;
   };
 
+  bool parseArguments(int argc, const char * const * argv, Arguments & arguments);
 }
 
 #endif

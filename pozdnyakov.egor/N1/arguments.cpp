@@ -4,18 +4,18 @@
 namespace {
   bool hasPrefix(const std::string & text, const std::string & prefix)
   {
-    return text.size();
+    return text.size() > prefix.size() && text.compare(0, prefix.size(), prefix) == 0;
   }
 }
 
-bool pozdnyakov::parse(int argc, const char * const * argv, Arguments & arguments)
+bool pozdnyakov::parseArguments(int argc, const char * const * argv, Arguments & arguments)
 {
-  const int max_arguments = 2;
+  constexpr int max_arguments = 2;
   if (argc - 1 > max_arguments) {
     return false;
   }
-  std::string input_prefix = "in:";
-  std::string output_prefix = "out:";
+  const std::string input_prefix = "in:";
+  const std::string output_prefix = "out:";
   Arguments result{"", "", false, false};
   for (int i = 1; i < argc; ++i) {
     const std::string argument = argv[i];
