@@ -11,7 +11,7 @@ int main(int argc, char ** argv)
 {
   constexpr int max_arguments = 2;
   constexpr int invalid_arguments_code = 1;
-  constexpr int empty_input_code = 1;
+  constexpr int empty_input_code = 0;
   constexpr int file_error_code = 2;
   if (argc - 1 > max_arguments) {
     std::cerr << "Too many command line arguments\n";
@@ -43,7 +43,6 @@ int main(int argc, char ** argv)
   }
   if (statistics.accepted == 0 && statistics.ignored == 0) {
     std::cout << '\n';
-    std::cerr << "Empty input\n";
     return empty_input_code;
   }
   std::cerr << statistics.accepted << ' ' << statistics.ignored << '\n';
